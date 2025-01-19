@@ -529,5 +529,66 @@ def extract_pages(input_pdf_path, page_numbers, output_pdf_path):
 def index():
     return render_template_string(HTML_TEMPLATE)
 
+# Page Numbering Tool Route
+@app.route('/page-numbering', methods=['GET', 'POST'])
+def page_numbering():
+    if request.method == 'POST':
+        if 'pdf_file' not in request.files:
+            return "No file part"
+        
+        pdf_file = request.files['pdf_file']
+        
+        if pdf_file.filename == '':
+            return "No selected file"
+        
+        input_pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], pdf_file.filename)
+        pdf_file.save(input_pdf_path)
+
+        numbering_method = request.form['numbering_method']
+        position = request.form['position']
+
+        output_pdf_filename = f"{os.path.splitext(pdf_file.filename)[0]}_page_numbered.pdf"
+        output_pdf_path = os.path.join(app.config['OUTPUT_FOLDER'], output_pdf_filename)
+        
+        add_page_numbers(input_pdf_path, output_pdf_path, numbering_method, position)
+        
+        # Ensure the file exists and is valid before serving
+        if not os.path.exists(output_pdf_path):
+            abort(404, description="File not found")
+
+        return send_from_directory(app.config['OUTPUT_FOLDER'], output_pdf_filename, as_attachment=True)
+    
+    return render_template_string(PAGE_NUMBERING_TEMPLATE)
+
+# Extract Pages Tool Route
+@app.route('/extract-pages', methods=['GET', 'POST'])
+def extract_pages_route():
+    if request.method == 'POST':
+        if 'pdf_file' not in request.files:
+            return "No file part"
+        
+        pdf_file = request.files['pdf_file']
+        
+        if pdf_file.filename == '':
+            return "No selected file"
+        
+        input_pdf_path = os.path.join(app.config['UPLOAD_FOLDER'], pdf_file.filename)
+        pdf_file.save(input_pdf_path)
+
+        page_numbers = request.form['page_numbers']
+        page_numbers = list(map(int, page_numbers.split(',')))  # Convert string to list of integers
+
+        output_pdf_filename = f"{os.path.splitext(pdf_file.filename)[0]}_extracted.pdf"
+        output_pdf_path = os.path.join(app.config['OUTPUT_FOLDER'], output_pdf_filename)
+        extract_pages(input_pdf_path, page_numbers, output_pdf_path)
+        
+        # Ensure the file exists and is valid before serving
+        if not os.path.exists(output_pdf_path):
+            abort(404, description="File not found")
+
+        return send_from_directory(app.config['OUTPUT_FOLDER'], output_pdf_filename, as_attachment=True)
+
+    return render_template_string(EXTRACT_PAGES_TEMPLATE)
+   
 if __name__ == '__main__':
     app.run(debug=True)
