@@ -474,5 +474,60 @@ def remove_page():
 
     return render_template_string(REMOVE_PAGE_PAGE, style=STYLE)
 
+# Function to add page numbers to the PDF
+def add_page_numbers(input_pdf_path, output_pdf_path, numbering_method, position):
+    reader = PdfReader(input_pdf_path)
+    writer = PdfWriter()
+
+    total_pages = len(reader.pages)
+
+    for i in range(total_pages):
+        page = reader.pages[i]
+        packet = io.BytesIO()
+        c = canvas.Canvas(packet, pagesize=letter)
+
+        if numbering_method == 'simple':
+            page_number = f"Page {i + 1} of {total_pages}"
+        elif numbering_method == 'detailed':
+            page_number = f"{i + 1}, "
+        else:
+            page_number = f"Page {i + 1}"
+
+        c.setFont("Helvetica", 10)
+        if position == 'left':
+            c.drawString(10, 10, page_number)
+        elif position == 'middle':
+            c.drawString(270, 10, page_number)  # Center position
+        elif position == 'right':
+            c.drawString(500, 10, page_number)
+
+        c.save()
+
+        packet.seek(0)
+        new_pdf = PdfReader(packet)
+        page.merge_page(new_pdf.pages[0])
+
+        writer.add_page(page)
+
+    with open(output_pdf_path, "wb") as output_pdf:
+        writer.write(output_pdf)
+
+# Function to extract pages from a PDF
+def extract_pages(input_pdf_path, page_numbers, output_pdf_path):
+    reader = PdfReader(input_pdf_path)
+    writer = PdfWriter()
+
+    for page_num in page_numbers:
+        if page_num < len(reader.pages):
+            writer.add_page(reader.pages[page_num])
+
+    with open(output_pdf_path, "wb") as output_pdf:
+        writer.write(output_pdf)
+
+# Home route with tool selection
+@app.route('/')
+def index():
+    return render_template_string(HTML_TEMPLATE)
+
 if __name__ == '__main__':
     app.run(debug=True)
