@@ -231,6 +231,60 @@ REMOVE_PAGE_PAGE = '''
     </html>
 '''
 
+# HTML Template for Page Numbering Tool
+PAGE_NUMBERING_TEMPLATE = '''
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Numbering Tool</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background-color: #f0f4f7; margin: 0; padding: 0; color: #333; }
+        header { background-color: #0066cc; color: white; padding: 20px; text-align: center; font-size: 24px; }
+        main { padding: 40px; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        .form-container { background-color: white; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; width: 100%; max-width: 500px; }
+        button { background-color: #0066cc; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; width: 100%; margin-top: 20px; }
+        button:hover { background-color: #004d99; }
+        footer { text-align: center; padding: 20px; background-color: #f0f4f7; color: #333; margin-top: 40px; }
+    </style>
+</head>
+<body>
+    <header>
+        PDF Page Numbering Tool
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h2>Upload a PDF to Add Page Numbers</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="file" name="pdf_file" accept=".pdf" required><br><br>
+
+                <label for="numbering_method">Choose Numbering Method:</label><br>
+                <select name="numbering_method" required>
+                    <option value="simple">Page 1 of 4</option>
+                    <option value="detailed">1, 2, 3...</option>
+                    <option value="classic">Page 1</option>
+                </select><br><br>
+
+                <label for="position">Choose Position:</label><br>
+                <select name="position" required>
+                    <option value="left">Bottom Left</option>
+                    <option value="middle">Bottom Center</option>
+                    <option value="right">Bottom Right</option>
+                </select><br><br>
+
+                <button type="submit">Upload and Add Page Numbers</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>Created by Your Name - PDF Processing Tools</p>
+    </footer>
+</body>
+</html>
+'''
 # Home route
 @app.route('/')
 def home():
