@@ -107,6 +107,8 @@ HOME_PAGE = '''
             <a href="/rotate" class="btn">PDF Rotate</a>
             <a href="/extract_text" class="btn">Extract Text from PDF</a>
             <a href="/remove_page" class="btn">Remove Page from PDF</a>
+            <a href="/page_numbering" class="btn">Page Numbering Tool</a>
+            <a href="/extract_pages" class="btn">Extract Pages Tool</a>
         </div>
     </body>
     </html>
