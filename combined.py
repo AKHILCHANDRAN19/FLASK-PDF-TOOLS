@@ -312,7 +312,7 @@ EXTRACT_PAGES_TEMPLATE = '''
     <main>
         <div class="form-container">
             <h2>Extract Pages from PDF</h2>
-            <form method="POST" enctype="multipart/form-data">
+            <form action="/extract_pages" method="POST" enctype="multipart/form-data">
                 <input type="file" name="pdf_file" accept=".pdf" required><br><br>
 
                 <label for="page_numbers">Enter Page Numbers (comma separated):</label><br>
