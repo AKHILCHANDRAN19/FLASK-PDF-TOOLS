@@ -1,6 +1,8 @@
 from flask import Flask, render_template_string, request, send_file, send_from_directory, abort
 import os
-import PyPDF2
+from PyPDF2 import PdfReader, PdfWriter
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 import io
 
 app = Flask(__name__)
